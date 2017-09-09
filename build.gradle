@@ -1,0 +1,33 @@
+plugins {
+    id "nebula.ospackage" version "4.4.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+group = 'nu.mine.mosher.gedcom'
+version = '1.0.0-SNAPSHOT'
+mainClassName = 'nu.mine.mosher.gedcom.GedcomEd'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url 'http://mosher.mine.nu/maven'
+    }
+}
+
+dependencies {
+    compile group: 'nu.mine.mosher.gedcom', name: 'gedcom-lib', version: 'latest.integration'
+    compile group: 'nu.mine.mosher.mopper', name: 'mopper', version: 'latest.integration'
+}
+
+apply plugin: 'nebula.ospackage-application'
+
+assemble.dependsOn buildRpm
+assemble.dependsOn buildDeb
+
+ospackage {
+    link("/usr/local/bin/${project.name}", "/opt/${project.name}/bin/${project.name}")
+}
